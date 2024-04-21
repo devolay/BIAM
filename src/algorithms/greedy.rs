@@ -6,7 +6,7 @@ use rand::seq::SliceRandom;
 use rand::thread_rng;
 
 use crate::data::instance::Instance;
-use crate::algorithms::utils::{LocalSearch, SearchAlgorithm, AlgorithmStepStatistics};
+use crate::algorithms::utils::{NeighbourhoodGenerator, SearchAlgorithm, AlgorithmStepStatistics};
 
 use super::utils::Algorithm;
 
@@ -19,7 +19,7 @@ pub struct GreedyLocalSearch {
     log_history: HashMap<i32, AlgorithmStepStatistics>
 }
 
-impl LocalSearch for GreedyLocalSearch {
+impl NeighbourhoodGenerator for GreedyLocalSearch {
     fn _generate_neighbourhood(&self) ->  Vec<(usize, usize)> {
         let mut neighbourhood = Vec::new();
         for i in 0..self.instance.city_coords.len() {

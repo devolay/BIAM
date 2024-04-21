@@ -11,7 +11,7 @@ pub trait SearchAlgorithm {
     fn _load_initial_solution(&mut self) -> Vec<i32>;
 }
 
-pub trait LocalSearch: SearchAlgorithm {
+pub trait NeighbourhoodGenerator: SearchAlgorithm {
     fn _generate_neighbourhood(&self) ->  Vec<(usize, usize)>;
 }
 
@@ -22,4 +22,11 @@ pub struct AlgorithmStepStatistics {
     pub solution_distance: f64,
     pub evaluated_solutions: i32,
     pub elapsed_time: u128,
+}
+
+
+pub fn get_move_distance(a: usize, b: usize, instance: &Instance, current_solution: &Vec<i32>) -> f64 {
+    let mut a_candidate = current_solution.clone();
+    a_candidate.swap(a, b);
+    instance.get_solution_distance(&a_candidate)
 }

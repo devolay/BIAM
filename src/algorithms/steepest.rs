@@ -6,7 +6,7 @@ use rand::seq::SliceRandom;
 use rand::thread_rng;
 
 use crate::data::instance::Instance;
-use crate::algorithms::utils::{Algorithm, LocalSearch, SearchAlgorithm, AlgorithmStepStatistics};
+use crate::algorithms::utils::{Algorithm, NeighbourhoodGenerator, SearchAlgorithm, AlgorithmStepStatistics};
 
 pub struct SteepestLocalSearch {
     algorithm_name: String,
@@ -17,7 +17,7 @@ pub struct SteepestLocalSearch {
     log_history: HashMap<i32, AlgorithmStepStatistics>
 }
 
-impl LocalSearch for SteepestLocalSearch {
+impl NeighbourhoodGenerator for SteepestLocalSearch {
     fn _generate_neighbourhood(&self) ->  Vec<(usize, usize)> {
         let mut neighbourhood = Vec::new();
         for i in 0..self.instance.city_coords.len() {
