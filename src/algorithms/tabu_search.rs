@@ -96,19 +96,6 @@ impl Algorithm for TabuSearch {
                 self.log_history.insert(step, stats);
             }
 
-            // Update tabu tenures
-            for current_tenure in tabu_list.values_mut() {
-                *current_tenure -= 1;
-            }
-            // Remove decayed move from tabu list
-            let decayed_moves: Vec<(usize, usize)> = tabu_list.iter()
-                .filter(|&(_, &value)| value <= 0)
-                .map(|(key, _)| *key)
-                .collect();
-            for _move in decayed_moves {
-                tabu_list.remove(&_move);
-            }
-
             // Construct master list 
             if master_list.is_empty(){
                 // If its empty, evaluate whole neighbourhood and take the elite
@@ -144,6 +131,19 @@ impl Algorithm for TabuSearch {
                 }
             }
 
+            // Update tabu tenures
+            for current_tenure in tabu_list.values_mut() {
+                *current_tenure -= 1;
+            }
+            // Remove decayed move from tabu list
+            let decayed_moves: Vec<(usize, usize)> = tabu_list.iter()
+                .filter(|&(_, &value)| value <= 0)
+                .map(|(key, _)| *key)
+                .collect();
+            for _move in decayed_moves {
+                tabu_list.remove(&_move);
+            }
+
             let (master_move, candidate_distance)= master_list.pop_front().expect("");
             if !tabu_list.contains_key(&master_move) || candidate_distance < best_distance{
                 // If move is not tabu or has best distance ever found then use it
@@ -163,18 +163,18 @@ impl Algorithm for TabuSearch {
                 }
             }
 
-            if no_improvement_counter > self.instance.city_coords.len()as i32 {
-                let stats = AlgorithmStepStatistics {
-                    solution: best_solution.clone(),
-                    solution_score: self.instance.get_solution_score(&best_solution),
-                    solution_distance: self.instance.get_solution_distance(&best_solution),
-                    evaluated_solutions: evaluated_solutions,
-                    elapsed_time: start_time.elapsed().as_micros()
-                };
-                self.log_history.insert(step, stats);
+            if no_improvement_counter > neighbourhood.len() as i32 {
                 break;
             }
         }
+        let stats = AlgorithmStepStatistics {
+            solution: best_solution.clone(),
+            solution_score: self.instance.get_solution_score(&best_solution),
+            solution_distance: self.instance.get_solution_distance(&best_solution),
+            evaluated_solutions: evaluated_solutions,
+            elapsed_time: start_time.elapsed().as_micros()
+        };
+        self.log_history.insert(step, stats);
         self.log_history.clone()
     }
 }

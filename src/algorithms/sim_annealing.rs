@@ -85,7 +85,7 @@ impl Algorithm for SimmulatedAnnealing {
         let mut no_improvement_counter: i32 = 0;
         let heating_rate = 1.1;
         let cooling_rate = 0.99;
-        let max_iterations = self.instance.city_coords.len() * 2;
+        let max_iterations = neighbourhood.len();
 
         // Heating
         loop {
@@ -149,7 +149,7 @@ impl Algorithm for SimmulatedAnnealing {
             }
             temp *= cooling_rate;
 
-            if temp < 0.01 && no_improvement_counter > self.instance.city_coords.len() as i32 {
+            if temp < 0.01 && no_improvement_counter > max_iterations as i32 {
                 break;
             }
         }
